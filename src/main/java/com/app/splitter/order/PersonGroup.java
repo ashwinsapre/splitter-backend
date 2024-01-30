@@ -12,7 +12,7 @@ public class PersonGroup {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "name") // Renamed from "group_name" to "name"
+    @Column(name = "name")
     private String name;
 
     // Constructors, getters, setters, and other methods

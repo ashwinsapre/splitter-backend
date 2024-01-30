@@ -3,20 +3,21 @@ package com.app.splitter.order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import com.app.splitter.order.OrderService;
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.lang.Math.abs;
 
 //controls /orders route
 
 @RestController
 @RequestMapping(path="/orders")
+@CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
 public class OrderController {
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
@@ -44,6 +45,21 @@ public class OrderController {
         List<Item> itemsResponse = itemRepository.findByOrderId(orderId);
         if (!itemsResponse.isEmpty()) {
             return ResponseEntity.ok(itemsResponse);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/removeOrder/{orderId}")
+    @Transactional
+    public ResponseEntity<Void> removeOrder(@PathVariable String orderId) {
+        int orderIdInt = Integer.parseInt(orderId);
+        System.out.println(orderIdInt);
+        if (orderRepository.existsByOrderId(orderIdInt)) {
+            // Implement logic to remove associated items or any additional cleanup
+            orderRepository.deleteByOrderId(orderIdInt);
+            itemRepository.deleteByOrderId(orderIdInt);
+            return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }

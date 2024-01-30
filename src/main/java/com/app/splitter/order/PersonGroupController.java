@@ -14,7 +14,7 @@ import static java.lang.Math.abs;
 
 @RestController
 @RequestMapping("/groups")
-@CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.OPTIONS})
+@CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
 public class PersonGroupController {
     private final PersonGroupRepository personGroupRepository;
     private final GroupMappingRepository groupMappingRepository;
@@ -63,6 +63,19 @@ public class PersonGroupController {
             for (int pid : personIds) {
                 groupMappingRepository.save(new GroupMapping(pid, groupId));
             }
+        }
+    }
+    @DeleteMapping("/removeGroup/{groupId}")
+    public ResponseEntity<Void> removeOrder(@PathVariable String groupId) {
+        Long groupIdInt = Long.parseLong(groupId);
+        System.out.println("trying to remove group id="+groupIdInt);
+        if (personGroupRepository.existsById(groupIdInt)) {
+            // Implement logic to remove associated items or any additional cleanup
+            personGroupRepository.deleteById(groupIdInt);
+            groupMappingRepository.deleteByGroupId(groupIdInt);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 

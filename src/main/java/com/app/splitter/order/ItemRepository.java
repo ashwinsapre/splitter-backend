@@ -10,4 +10,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findByOrderId(int id);
 
     Item save(Item o);
+
+    void deleteByOrderId(int orderIdInt);
 }

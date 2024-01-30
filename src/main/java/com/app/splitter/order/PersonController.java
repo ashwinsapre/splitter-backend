@@ -10,6 +10,7 @@ import static java.lang.Math.abs;
 
 @RestController
 @RequestMapping("/person")
+@CrossOrigin(origins = "http://localhost:3000", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
 public class PersonController {
 
     private final PersonRepository personRepository;
@@ -44,6 +45,20 @@ public class PersonController {
         int i= Integer.parseInt(id);
         List<Object[]> resp = orderHistoryRepository.findPersonTotalByPersonId(i);
         return ResponseEntity.ok(resp);
+    }
+
+    @DeleteMapping("/removePerson/{personId}")
+    public ResponseEntity<Void> removePerson(@PathVariable String personId) {
+        int personIdInt = Integer.parseInt(personId);
+        System.out.println("trying to remove person id="+personIdInt);
+//        if (orderRepository.existsById(orderIdInt)) {
+//            // Implement logic to remove associated items or any additional cleanup
+//            orderRepository.deleteById(orderIdInt);
+//            return ResponseEntity.noContent().build();
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+        return ResponseEntity.noContent().build();
     }
     public void insertData(@RequestBody Person p) {
         personRepository.save(p);
