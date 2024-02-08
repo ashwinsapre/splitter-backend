@@ -18,4 +18,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     boolean existsByOrderId(int orderIdInt);
 
     void deleteByOrderId(int orderIdInt);
+
+    Optional<Order> findByOrderId(Long orderId);
+
 }

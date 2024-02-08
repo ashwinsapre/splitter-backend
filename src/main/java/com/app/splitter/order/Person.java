@@ -14,6 +14,16 @@ public class Person {
     @Column(name="name")
     private String name;
 
+    public boolean isArchived() {
+        return isArchived;
+    }
+
+    public void setArchived(boolean archived) {
+        isArchived = archived;
+    }
+
+    private boolean isArchived;
+
     public Person(){
         this.name="";
         this.id=0;
@@ -21,6 +31,7 @@ public class Person {
     public Person(String name, int id) {
         this.name = name;
         this.id = id;
+        this.isArchived = false;
     }
 
     // Getter for name

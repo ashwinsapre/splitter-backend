@@ -42,7 +42,11 @@ public class OrderController {
     //orders/{id} returns details of a specific order
     public ResponseEntity<List<Item>> getOrderDetails(@PathVariable String id) {
         int orderId = Integer.parseInt(id);
+        Optional<Order> orderOptional = orderRepository.findByOrderId(orderId);
+
+        String d = String.valueOf(orderOptional.get().getDate());
         List<Item> itemsResponse = itemRepository.findByOrderId(orderId);
+        itemsResponse.add(0, new Item(0, d, 0, 0));
         if (!itemsResponse.isEmpty()) {
             return ResponseEntity.ok(itemsResponse);
         } else {
@@ -53,17 +57,23 @@ public class OrderController {
     @DeleteMapping("/removeOrder/{orderId}")
     @Transactional
     public ResponseEntity<Void> removeOrder(@PathVariable String orderId) {
-        int orderIdInt = Integer.parseInt(orderId);
-        System.out.println(orderIdInt);
-        if (orderRepository.existsByOrderId(orderIdInt)) {
-            // Implement logic to remove associated items or any additional cleanup
-            orderRepository.deleteByOrderId(orderIdInt);
-            itemRepository.deleteByOrderId(orderIdInt);
+        Long orderIdLong = Long.parseLong(orderId);
+        Optional<Order> optionalOrder = orderRepository.findByOrderId(orderIdLong);
+        if (optionalOrder.isPresent()) {
+            Order order = optionalOrder.get();
+            if (!order.isArchived()){
+                order.setArchived(true);
+            }
+            else {
+                order.setArchived(false);
+            }
+            orderRepository.save(order);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     public void insertData(@RequestBody Order o) {
         System.out.println(o.getOrderId());

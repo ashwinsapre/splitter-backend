@@ -49,16 +49,21 @@ public class PersonController {
 
     @DeleteMapping("/removePerson/{personId}")
     public ResponseEntity<Void> removePerson(@PathVariable String personId) {
-        int personIdInt = Integer.parseInt(personId);
-        System.out.println("trying to remove person id="+personIdInt);
-//        if (orderRepository.existsById(orderIdInt)) {
-//            // Implement logic to remove associated items or any additional cleanup
-//            orderRepository.deleteById(orderIdInt);
-//            return ResponseEntity.noContent().build();
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-        return ResponseEntity.noContent().build();
+        Long personIdInt = Long.parseLong(personId);
+        Optional<Person> person = personRepository.findById(personIdInt);
+        if (person.isPresent()) {
+            Person p = person.get();
+            if (!p.isArchived()){
+                p.setArchived(true);
+            }
+            else{
+                p.setArchived(false);
+            }
+            personRepository.save(p);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
     public void insertData(@RequestBody Person p) {
         personRepository.save(p);

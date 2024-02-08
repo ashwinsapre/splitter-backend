@@ -15,6 +15,16 @@ public class Order {
     @Temporal(TemporalType.DATE)
     private LocalDate date;
 
+    public boolean isArchived() {
+        return isArchived;
+    }
+
+    public void setArchived(boolean archived) {
+        isArchived = archived;
+    }
+
+    private boolean isArchived;
+
     public Long getOrderId() {
         return orderId;
     }
@@ -34,6 +44,7 @@ public class Order {
     public Order(Long orderId, LocalDate date) {
         this.orderId = orderId;
         this.date = date;
+        this.isArchived = false;
     }
 
     public Order() {
