@@ -43,7 +43,8 @@ public class PersonController {
     //persons/{id} returns order history of a specific person
     public ResponseEntity<List<Object[]>> getPersonDetails(@PathVariable String id) {
         int i= Integer.parseInt(id);
-        List<Object[]> resp = orderHistoryRepository.findPersonTotalByPersonId(i);
+        List<Object[]> resp = orderHistoryRepository.findByPersonId(i);
+        //List<Object[]> resp = orderHistoryRepository.findPersonTotalByPersonId(i);
         return ResponseEntity.ok(resp);
     }
 
